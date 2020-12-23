@@ -340,6 +340,33 @@
                                         </LinearLayout>
                                 </LinearLayout>
                         </androidx.cardview.widget.CardView>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/recyclerView3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
+                        </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:fontFamily="@font/aclonica"
+                            android:text="Caste"
+                            android:textColor="@color/text_color"
+                            android:textSize="22sp"></TextView>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/recyclerView2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scrollbars="horizontal"></androidx.recyclerview.widget.RecyclerView>
+                        </RelativeLayout>
+
                         <TextView
                             android:layout_marginTop="10dp"
                             android:layout_width="wrap_content"

@@ -19,15 +19,21 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.codingburg.mid.adapter.CastAdapter;
 import com.codingburg.mid.adapter.MovieAdapter;
 import com.codingburg.mid.adapter.MovieAdapterForCard;
 import com.codingburg.mid.adapter.ProductionCompanyAdapter;
 import com.codingburg.mid.R;
 import com.codingburg.mid.adapter.TypeAdapter;
+import com.codingburg.mid.adapter.VideoAdapter;
+import com.codingburg.mid.model.Cast;
 import com.codingburg.mid.model.MovieList;
 import com.codingburg.mid.model.ProductionCompanyData;
 import com.codingburg.mid.model.TypeData;
+import com.codingburg.mid.model.Video;
+import com.codingburg.mid.utiles.AddLifecycleCallbackListener;
 import com.leo.simplearcloader.SimpleArcLoader;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,25 +42,30 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieDetailsActivity extends AppCompatActivity {
+public class MovieDetailsActivity extends AppCompatActivity implements AddLifecycleCallbackListener {
     private String id, rating,title,vote;
     String Url = "https://api.themoviedb.org/3/movie/";
     String secoundUrl = "?api_key=9fd3e2138534849340edf9888424bc38&language=en-US";
     String recommandationUrl = "/recommendations?api_key=9fd3e2138534849340edf9888424bc38&language=en-US&page=1";
+    String castUrl = "/credits?api_key=9fd3e2138534849340edf9888424bc38&language=en-US";
+    String videoUrl ="/videos?api_key=9fd3e2138534849340edf9888424bc38&language=en-US";
     ImageView coverImage,imageView2;
     TextView ratingd,name, votes, overView, tagline, runtime, revenue, release_date, status, budget;
     String image_url = "https://image.tmdb.org/t/p/w500";
-    private RecyclerView rproduction, movietype, recyclerView;
+    private RecyclerView rproduction, movietype, recyclerView, recyclerView2,recyclerView3;
     private SimpleArcLoader simpleArcLoader, simpleArcLoader2, simpleArcLoader3;
     List<ProductionCompanyData> productionList;
     List<TypeData> typeList;
     LinearLayoutManager HorizontalLayout;
     private RequestQueue mRequestQueue;
     List<MovieList> productList;
+    List<Cast> castList;
+    List<Video> videoList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
         id = getIntent().getExtras().getString("id");
         title = getIntent().getExtras().getString("title");
         vote = getIntent().getExtras().getString("vote");
@@ -76,8 +87,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
         simpleArcLoader = findViewById(R.id.loader2);
         movietype = findViewById(R.id.type);
         recyclerView = findViewById(R.id.recyclerView);
+        recyclerView2 = findViewById(R.id.recyclerView2);
+        recyclerView3 = findViewById(R.id.recyclerView3);
         productionList = new ArrayList<>();
         typeList = new ArrayList<>();
+        castList = new ArrayList<>();
+        videoList = new ArrayList<>();
         ratingd.setText(rating);
         name.setText(title);
         votes.setText(vote);
@@ -93,6 +108,95 @@ public class MovieDetailsActivity extends AppCompatActivity {
         productionData();
         moveType();
         loadMovie();
+        castData();
+        videoLoad();
+    }
+
+    private void videoLoad() {
+        recyclerView3.setHasFixedSize(true);
+        recyclerView3.setLayoutManager(new LinearLayoutManager(this));
+        String URL_PRODUCTS   = Url + id + videoUrl;;
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.getJSONArray("results");
+                    for(int i = 0; i<jsonArray.length(); i++){
+                        JSONObject movie = jsonArray.getJSONObject(i);
+                        videoList.add(new Video(
+                                movie.getString("id"),
+                                movie.getString("key"),
+                                movie.getString("type")
+                        ));
+                        if(i <=3){
+                            break;
+                        }
+                    }
+                    VideoAdapter adapter = new VideoAdapter(MovieDetailsActivity.this, videoList);
+                    recyclerView3.setAdapter(adapter);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                error.printStackTrace();
+
+            }
+        });
+        mRequestQueue.add(jsonObjectRequest);
+
+    }
+
+    private void castData() {
+        String URL_PRODUCTS   = Url + id + castUrl;;
+        recyclerView2.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.getJSONArray("cast");
+                    for(int i = 0; i<jsonArray.length(); i++){
+                        JSONObject movie = jsonArray.getJSONObject(i);
+                        castList.add(new Cast(
+                                movie.getString("gender"),
+                                movie.getString("id"),
+                                movie.getString("known_for_department"),
+                                movie.getString("name"),
+                                movie.getString("original_name"),
+                                movie.getString("popularity"),
+                                movie.getString("profile_path"),
+                                movie.getString("cast_id"),
+                                movie.getString("character"),
+                                movie.getString("credit_id")
+
+                        ));
+                    }
+                    CastAdapter adapter = new CastAdapter(MovieDetailsActivity.this, castList);
+                    recyclerView2.setAdapter(adapter);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                error.printStackTrace();
+
+            }
+        });
+        mRequestQueue.add(jsonObjectRequest);
     }
 
     private void moveType() {
@@ -316,4 +420,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void addLifeCycleCallBack(YouTubePlayerView youTubePlayerView) {
+        getLifecycle().addObserver(youTubePlayerView);
+    }
 }
