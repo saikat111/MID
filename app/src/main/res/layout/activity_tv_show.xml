@@ -1,9 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.TvShowActivity">
+    android:background="@color/colorPrimary"
+    >
+    <androidx.core.widget.NestedScrollView
+        android:layout_marginBottom="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary">
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:menu="@menu/top_bar"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Movie Info Desk"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/aclonica"></TextView>
+                </com.google.android.material.appbar.MaterialToolbar>
+            </com.google.android.material.appbar.AppBarLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/aclonica"
+                android:text="Top Rated"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"></TextView>
+            <RelativeLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.leo.simplearcloader.SimpleArcLoader
+                    android:visibility="visible"
+                    android:id="@+id/loader3"
+                    android:layout_centerInParent="true"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    app:arc_style="simple_arc"
+                    >
+                </com.leo.simplearcloader.SimpleArcLoader>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewtvshow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/aclonica"
+                android:text="Popular Tv Show"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"></TextView>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.leo.simplearcloader.SimpleArcLoader
+                    android:visibility="visible"
+                    android:id="@+id/loader4"
+                    android:layout_centerInParent="true"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    app:arc_style="simple_arc"
+                    >
+                </com.leo.simplearcloader.SimpleArcLoader>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal"></androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/aclonica"
+                android:text="Currently on the air"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"></TextView>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.leo.simplearcloader.SimpleArcLoader
+                    android:visibility="visible"
+                    android:id="@+id/loader"
+                    android:layout_centerInParent="true"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    app:arc_style="simple_arc"
+                    >
+                </com.leo.simplearcloader.SimpleArcLoader>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewtrending"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+    <com.luseen.spacenavigation.SpaceNavigationView
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        />
+
+</RelativeLayout>

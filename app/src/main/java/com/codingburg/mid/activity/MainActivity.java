@@ -42,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue mRequestQueue;
     //a list to store all the products
     List<MovieList> productList;
+    List<MovieList> hindiproductList;
     List<TvList> TvShowList;
     List<TrendingList> trendingList;
     //the recyclerview
-    RecyclerView recyclerView, recyclerViewtvshow, recyclerViewtrending;
+    RecyclerView recyclerView, recyclerViewtvshow, recyclerViewtrending, recyclerView3;
     LinearLayoutManager HorizontalLayout;
     private Toolbar toolbar;
-    private SimpleArcLoader simpleArcLoader, simpleArcLoader2, simpleArcLoader3;
+    private SimpleArcLoader simpleArcLoader, simpleArcLoader2, simpleArcLoader3, simpleArcLoader4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +57,12 @@ public class MainActivity extends AppCompatActivity {
         simpleArcLoader = findViewById(R.id.loader);
         simpleArcLoader2 = findViewById(R.id.loader2);
         simpleArcLoader3 = findViewById(R.id.loader3);
+        simpleArcLoader4 = findViewById(R.id.loader4);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerViewtvshow = findViewById(R.id.recyclerViewtvshow);
         recyclerViewtrending = findViewById(R.id.recyclerViewtrending);
+        recyclerView3 = findViewById(R.id.recyclerView3);
         recyclerView.setHasFixedSize(true);
         recyclerViewtvshow.setHasFixedSize(true);
         HorizontalLayout
@@ -73,12 +76,14 @@ public class MainActivity extends AppCompatActivity {
         productList = new ArrayList<>();
         TvShowList = new ArrayList<>();
         trendingList = new ArrayList<>();
+        hindiproductList = new ArrayList<>();
         mRequestQueue = Volley.newRequestQueue(this);
         //this method will fetch and parse json
         //to display it in recyclerview
         loadMoviePopular();
         loadPopularTvShow();
         loadTrending();
+        hindiMovie();
         SpaceNavigationView spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
 //        spaceNavigationView.setSpaceBackgroundColor(ContextCompat.getColor(this, R.color.gnt_blue));
@@ -119,6 +124,61 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void hindiMovie() {
+        HorizontalLayout
+                = new LinearLayoutManager(
+                MainActivity.this,
+                LinearLayoutManager.HORIZONTAL,
+                false);
+        recyclerView3.setLayoutManager(HorizontalLayout);
+        simpleArcLoader4.start();
+        String URL_PRODUCTS = "https://api.themoviedb.org/3/discover/movie?api_key=9fd3e2138534849340edf9888424bc38&language=hi-IN&region=IN&sort_by=popularity.desc&page=1&with_original_language=hi";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.getJSONArray("results");
+                    for(int i = 0; i<jsonArray.length(); i++){
+                        JSONObject movie = jsonArray.getJSONObject(i);
+                        hindiproductList.add(new MovieList(
+                                movie.getString("id"),
+                                movie.getString("original_language"),
+                                movie.getString("original_title"),
+                                movie.getString("overview"),
+                                movie.getString("popularity"),
+                                movie.getString("poster_path"),
+                                movie.getString("release_date"),
+                                movie.getString("title"),
+                                movie.getString("vote_average"),
+                                movie.getString("vote_count")
+
+                        ));
+                    }
+                    MovieAdapter adapter = new MovieAdapter(MainActivity.this, hindiproductList);
+                    recyclerView3.setAdapter(adapter);
+                    simpleArcLoader4.stop();
+                    simpleArcLoader4.setVisibility(View.GONE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    simpleArcLoader4.stop();
+                    simpleArcLoader4.setVisibility(View.GONE);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                simpleArcLoader3.stop();
+                simpleArcLoader3.setVisibility(View.GONE);
+                error.printStackTrace();
+
+            }
+        });
+        mRequestQueue.add(jsonObjectRequest);
 
     }
 
