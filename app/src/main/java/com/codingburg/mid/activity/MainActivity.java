@@ -22,6 +22,7 @@ import com.codingburg.mid.adapter.MovieAdapter;
 
 import com.codingburg.mid.adapter.TrendingAdapter;
 import com.codingburg.mid.adapter.TvShowAdapter;
+import com.codingburg.mid.api.Api;
 import com.codingburg.mid.model.MovieList;
 import com.codingburg.mid.model.TrendingList;
 import com.codingburg.mid.model.TvList;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    String api_key;
     private RequestQueue mRequestQueue;
     //a list to store all the products
     List<MovieList> productList;
@@ -54,11 +56,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Api api = new Api();
+        api_key = api.getApi_key();
+
+
         simpleArcLoader = findViewById(R.id.loader);
         simpleArcLoader2 = findViewById(R.id.loader2);
         simpleArcLoader3 = findViewById(R.id.loader3);
         simpleArcLoader4 = findViewById(R.id.loader4);
-
         recyclerView = findViewById(R.id.recyclerView);
         recyclerViewtvshow = findViewById(R.id.recyclerViewtvshow);
         recyclerViewtrending = findViewById(R.id.recyclerViewtrending);
@@ -90,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         spaceNavigationView.addSpaceItem(new SpaceItem("Movie", R.drawable.movie));
         spaceNavigationView.addSpaceItem(new SpaceItem("Tv Show", R.drawable.tv));
         spaceNavigationView.setCentreButtonIcon(R.drawable.ic_baseline_home_24);
+
         spaceNavigationView.setCentreButtonColor(ContextCompat.getColor(this, R.color.space_white));
         spaceNavigationView.showIconOnly();
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
@@ -135,8 +142,10 @@ public class MainActivity extends AppCompatActivity {
                 false);
         recyclerView3.setLayoutManager(HorizontalLayout);
         simpleArcLoader4.start();
-        String URL_PRODUCTS = "https://api.themoviedb.org/3/discover/movie?api_key=9fd3e2138534849340edf9888424bc38&language=hi-IN&region=IN&sort_by=popularity.desc&page=1&with_original_language=hi";
-
+        //url
+        String firstUrl = "https://api.themoviedb.org/3/discover/movie?api_key=";
+        String hindiUrl = "&language=hi-IN&region=IN&sort_by=popularity.desc&page=1&with_original_language=hi";
+        String URL_PRODUCTS = firstUrl + api_key + hindiUrl;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -184,13 +193,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadTrending() {
         simpleArcLoader.start();
-       /* HorizontalLayout
-                = new LinearLayoutManager(
-                MainActivity.this,
-                LinearLayoutManager.HORIZONTAL,
-                false);*/
         recyclerViewtrending.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
-        String URL_PRODUCTS = "https://api.themoviedb.org/3/trending/all/day?api_key=9fd3e2138534849340edf9888424bc38";
+        String URL_PRODUCTS = "https://api.themoviedb.org/3/trending/all/day?api_key=" + api_key;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
@@ -240,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         simpleArcLoader2.start();
         HorizontalLayout = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
          recyclerViewtvshow.setLayoutManager(HorizontalLayout);
-        String URL_PRODUCTS = "https://api.themoviedb.org/3/tv/popular?api_key=9fd3e2138534849340edf9888424bc38&language=en-US&page=1";
+        String URL_PRODUCTS = "https://api.themoviedb.org/3/tv/popular?api_key=" + api_key + "&language=en-US&page=1";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
@@ -288,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadMoviePopular() {
         simpleArcLoader3.start();
-        String URL_PRODUCTS = "https://api.themoviedb.org/3/movie/popular?api_key=9fd3e2138534849340edf9888424bc38&language=en-US";
+        String URL_PRODUCTS = "https://api.themoviedb.org/3/movie/popular?api_key=" + api_key + "&language=en-US";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override

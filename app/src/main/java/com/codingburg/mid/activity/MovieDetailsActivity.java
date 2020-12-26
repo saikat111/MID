@@ -26,6 +26,7 @@ import com.codingburg.mid.adapter.ProductionCompanyAdapter;
 import com.codingburg.mid.R;
 import com.codingburg.mid.adapter.TypeAdapter;
 import com.codingburg.mid.adapter.VideoAdapter;
+import com.codingburg.mid.api.Api;
 import com.codingburg.mid.model.Cast;
 import com.codingburg.mid.model.MovieList;
 import com.codingburg.mid.model.ProductionCompanyData;
@@ -43,12 +44,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDetailsActivity extends AppCompatActivity implements AddLifecycleCallbackListener {
+    String api_key;
     private String id, rating,title,vote;
     String Url = "https://api.themoviedb.org/3/movie/";
-    String secoundUrl = "?api_key=9fd3e2138534849340edf9888424bc38&language=en-US";
-    String recommandationUrl = "/recommendations?api_key=9fd3e2138534849340edf9888424bc38&language=en-US&page=1";
-    String castUrl = "/credits?api_key=9fd3e2138534849340edf9888424bc38&language=en-US";
-    String videoUrl ="/videos?api_key=9fd3e2138534849340edf9888424bc38&language=en-US";
+
     ImageView coverImage,imageView2;
     TextView ratingd,name, votes, overView, tagline, runtime, revenue, release_date, status, budget;
     String image_url = "https://image.tmdb.org/t/p/w500";
@@ -65,7 +64,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements AddLifecy
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
-
+        Api api = new Api();
+        api_key = api.getApi_key();
+        String recommandationUrl = "/recommendations?api_key=" + api_key +"&language=en-US&page=1";
+        String castUrl = "/credits?api_key=" + api_key +"&language=en-US";
+        String videoUrl ="/videos?api_key="+api_key +"&language=en-US";
+        String secoundUrl = "?api_key="+ api_key + "&language=en-US";
         id = getIntent().getExtras().getString("id");
         title = getIntent().getExtras().getString("title");
         vote = getIntent().getExtras().getString("vote");
@@ -98,21 +102,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements AddLifecy
         votes.setText(vote);
         simpleArcLoader2 = findViewById(R.id.loader);
         productList = new ArrayList<>();
-      /*  HorizontalLayout
-                = new LinearLayoutManager(
-                MovieDetailsActivity.this,
-                LinearLayoutManager.HORIZONTAL,
-                false);*/
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
-        fetchData();
-        productionData();
-        moveType();
-        loadMovie();
-        castData();
-        videoLoad();
+        fetchData(secoundUrl);
+        productionData(secoundUrl);
+        moveType(secoundUrl);
+        loadMovie(recommandationUrl);
+        castData(castUrl);
+        videoLoad(videoUrl);
     }
 
-    private void videoLoad() {
+    private void videoLoad(String videoUrl) {
         recyclerView3.setHasFixedSize(true);
         recyclerView3.setLayoutManager(new LinearLayoutManager(this));
         String URL_PRODUCTS   = Url + id + videoUrl;;
@@ -154,7 +153,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements AddLifecy
 
     }
 
-    private void castData() {
+    private void castData(String castUrl) {
         String URL_PRODUCTS   = Url + id + castUrl;;
         recyclerView2.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
 
@@ -199,7 +198,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements AddLifecy
         mRequestQueue.add(jsonObjectRequest);
     }
 
-    private void moveType() {
+    private void moveType(String secoundUrl) {
         HorizontalLayout
                 = new LinearLayoutManager(
                 getApplicationContext(),
@@ -239,7 +238,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements AddLifecy
         mRequestQueue.add(jsonObjectRequest);
 
     }
-    private void loadMovie() {
+    private void loadMovie(String recommandationUrl) {
 
         String URL_PRODUCTS   = Url + id + recommandationUrl;;
 
@@ -286,7 +285,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements AddLifecy
     }
 
 
-    private void productionData() {
+    private void productionData(String secoundUrl) {
         simpleArcLoader.start();
         HorizontalLayout
                 = new LinearLayoutManager(
@@ -333,7 +332,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements AddLifecy
         mRequestQueue.add(jsonObjectRequest);
     }
 
-    private void fetchData() {
+    private void fetchData(String secoundUrl) {
         String url = Url + id + secoundUrl;
         simpleArcLoader2.start();
 
@@ -344,18 +343,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements AddLifecy
 
                         try {
                             JSONObject jsonObject = new JSONObject(response.toString());
-                           /* todayCase.setText(jsonObject.getString("todayCases"));
-                            todayDeath.setText(jsonObject.getString("todayDeaths"));
-                            todayRecovered.setText(jsonObject.getString("todayRecovered"));
-                            totalTest.setText(jsonObject.getString("tests"));
-                            totalCase.setText(jsonObject.getString("cases"));
-                            totalDeath.setText(jsonObject.getString("deaths"));
-                            totalRecovered.setText(jsonObject.getString("recovered"));
-                            activeCase.setText(jsonObject.getString("active"));
-                            toolbar_title.setText(jsonObject.getString("country"));
-                            counrtyName.setText(toolbar_title.getText().toString());*/
-                           /* JSONObject object = jsonObject.getJSONObject("countryInfo");
-                            String flagUrl = object.getString("flag");*/
                             overView.setText(jsonObject.getString("overview"));
                             status.setText(jsonObject.getString("status"));
                             if(Integer.parseInt(jsonObject.getString("budget")) == 0 ){

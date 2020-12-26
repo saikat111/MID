@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.codingburg.mid.adapter.MovieAdapter;
 import com.codingburg.mid.R;
+import com.codingburg.mid.api.Api;
 import com.codingburg.mid.model.MovieList;
 import com.leo.simplearcloader.SimpleArcLoader;
 import com.luseen.spacenavigation.SpaceItem;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieActivity extends AppCompatActivity {
+    String api_key;
     private RequestQueue mRequestQueue;
     //a list to store all the products
     List<MovieList> productList;
@@ -51,13 +53,12 @@ public class MovieActivity extends AppCompatActivity {
         simpleArcLoader2 = findViewById(R.id.loader2);
         simpleArcLoader3 = findViewById(R.id.loader3);
         simpleArcLoader4 = findViewById(R.id.loader4);
-
-
+        Api api = new Api();
+        api_key = api.getApi_key();
         recyclerView = findViewById(R.id.recyclerView);
         recyclerViewtvshow = findViewById(R.id.recyclerViewtvshow);
         recyclerViewtrending = findViewById(R.id.recyclerViewtrending);
         recyclerView3 = findViewById(R.id.recyclerView3);
-
         recyclerView.setHasFixedSize(true);
         recyclerViewtvshow.setHasFixedSize(true);
         HorizontalLayout
@@ -66,16 +67,11 @@ public class MovieActivity extends AppCompatActivity {
                 LinearLayoutManager.HORIZONTAL,
                 false);
         recyclerView.setLayoutManager(HorizontalLayout);
-        /* recyclerViewtvshow.setLayoutManager(new LinearLayoutManager(this));*/
-        //initializing the productlist
         productList = new ArrayList<>();
         topRated = new ArrayList<>();
         upcoming = new ArrayList<>();
         hindiproductList = new ArrayList<>();
-
         mRequestQueue = Volley.newRequestQueue(this);
-        //this method will fetch and parse json
-        //to display it in recyclerview
         loadMoviePopular();
         topRatedMovies();
         upcomingMovies();
@@ -128,7 +124,7 @@ public class MovieActivity extends AppCompatActivity {
                 false);
         recyclerView3.setLayoutManager(HorizontalLayout);
         simpleArcLoader4.start();
-        String URL_PRODUCTS = "https://api.themoviedb.org/3/discover/movie?api_key=9fd3e2138534849340edf9888424bc38&language=hi-IN&region=IN&sort_by=popularity.desc&page=1&with_original_language=hi";
+        String URL_PRODUCTS = "https://api.themoviedb.org/3/discover/movie?api_key="+api_key+"&language=hi-IN&region=IN&sort_by=popularity.desc&page=1&with_original_language=hi";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
@@ -183,7 +179,7 @@ public class MovieActivity extends AppCompatActivity {
                 LinearLayoutManager.HORIZONTAL,
                 false);
         recyclerViewtrending.setLayoutManager(HorizontalLayout);
-        String URL_PRODUCTS = "https://api.themoviedb.org/3/movie/upcoming?api_key=9fd3e2138534849340edf9888424bc38&language=en-US&page=1";
+        String URL_PRODUCTS = "https://api.themoviedb.org/3/movie/upcoming?api_key="+ api_key +"&language=en-US&page=1";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
@@ -234,7 +230,7 @@ public class MovieActivity extends AppCompatActivity {
         simpleArcLoader2.start();
         HorizontalLayout = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewtvshow.setLayoutManager(HorizontalLayout);
-        String URL_PRODUCTS = "https://api.themoviedb.org/3/movie/top_rated?api_key=9fd3e2138534849340edf9888424bc38&language=en-US&page=1";
+        String URL_PRODUCTS = "https://api.themoviedb.org/3/movie/top_rated?api_key=" + api_key + "&language=en-US&page=1";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
@@ -284,7 +280,7 @@ public class MovieActivity extends AppCompatActivity {
 
     private void loadMoviePopular() {
         simpleArcLoader3.start();
-        String URL_PRODUCTS = "https://api.themoviedb.org/3/movie/popular?api_key=9fd3e2138534849340edf9888424bc38&language=en-US";
+        String URL_PRODUCTS = "https://api.themoviedb.org/3/movie/popular?api_key=" + api_key +"&language=en-US";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
@@ -324,11 +320,9 @@ public class MovieActivity extends AppCompatActivity {
                 simpleArcLoader3.stop();
                 simpleArcLoader3.setVisibility(View.GONE);
                 error.printStackTrace();
-
             }
         });
         mRequestQueue.add(jsonObjectRequest);
-
     }
     @Override
     public void onBackPressed() {
