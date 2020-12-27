@@ -4,50 +4,44 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.codingburg.mid.R;
-import com.codingburg.mid.activity.MovieDetailsActivity;
 import com.codingburg.mid.activity.TvShowDetailsActivity;
-import com.codingburg.mid.model.Cast;
 import com.codingburg.mid.model.Video;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import java.util.List;
 
-public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ProductViewHolder> {
+public class TvVideoAdapter extends RecyclerView.Adapter<TvVideoAdapter.ProductViewHolder> {
     private Context mCtx;
     private List<Video> productList;
 
-    public VideoAdapter(Context mCtx, List<Video> productList) {
+    public TvVideoAdapter(Context mCtx, List<Video> productList) {
         this.mCtx = mCtx;
         this.productList = productList;
     }
 
     @Override
-    public VideoAdapter.ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TvVideoAdapter.ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.video, null);
-        return new VideoAdapter.ProductViewHolder(view);
+        return new TvVideoAdapter.ProductViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(VideoAdapter.ProductViewHolder holder, int position) {
+    public void onBindViewHolder(TvVideoAdapter.ProductViewHolder holder, int position) {
         Video movieData = productList.get(position);
 
         //loading the image
         holder.name.setText(movieData.getType() + ":");
 
-       holder.youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+        holder.youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
                 String videoId = movieData.getKey();
@@ -72,9 +66,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ProductViewH
             super(itemView);
             itemView.setOnClickListener(this);
             name = (TextView) itemView.findViewById(R.id.name);
-            youTubePlayerView =itemView.findViewById(R.id.youtube_player_view);
-          /* getLifecycle().addObserver(youTubePlayerView);*/
-            ((MovieDetailsActivity) mCtx).addLifeCycleCallBack(youTubePlayerView);
+            youTubePlayerView = itemView.findViewById(R.id.youtube_player_view);
+            /* getLifecycle().addObserver(youTubePlayerView);*/
+            ((TvShowDetailsActivity) mCtx).addLifeCycleCallBack(youTubePlayerView);
 
         }
 
@@ -84,3 +78,4 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ProductViewH
         }
     }
 }
+
