@@ -101,7 +101,7 @@
             android:fontFamily="@font/baloo"
             android:text="MID"
             android:textColor="@color/text_color"
-            android:textSize="150dp">
+            android:textSize="100dp">
 
         </TextView>
 

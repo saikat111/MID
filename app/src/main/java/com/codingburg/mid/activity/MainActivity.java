@@ -1,5 +1,7 @@
 package com.codingburg.mid.activity;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -7,9 +9,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.speech.RecognizerIntent;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,6 +43,7 @@ import com.leo.simplearcloader.SimpleArcLoader;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
+import com.onesignal.OneSignal;
 
 
 import org.json.JSONArray;
@@ -38,8 +52,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String ONESIGNAL_APP_ID = "d221ffbc-af32-4294-95fd-15cf9389dd78";
     String api_key;
     private RequestQueue mRequestQueue;
     //a list to store all the products
@@ -52,11 +70,15 @@ public class MainActivity extends AppCompatActivity {
     LinearLayoutManager HorizontalLayout;
     private Toolbar toolbar;
     private SimpleArcLoader simpleArcLoader, simpleArcLoader2, simpleArcLoader3, simpleArcLoader4;
+    int backPress = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+        // OneSignal Initialization
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId(ONESIGNAL_APP_ID);
         Api api = new Api();
         api_key = api.getApi_key();
 
@@ -95,15 +117,14 @@ public class MainActivity extends AppCompatActivity {
 //        spaceNavigationView.setSpaceBackgroundColor(ContextCompat.getColor(this, R.color.gnt_blue));
         spaceNavigationView.addSpaceItem(new SpaceItem("Movie", R.drawable.movie));
         spaceNavigationView.addSpaceItem(new SpaceItem("Tv Show", R.drawable.tv));
-        spaceNavigationView.setCentreButtonIcon(R.drawable.ic_baseline_home_24);
+        spaceNavigationView.setCentreButtonIcon(R.drawable.ic_baseline_keyboard_voice_24);
 
         spaceNavigationView.setCentreButtonColor(ContextCompat.getColor(this, R.color.space_white));
         spaceNavigationView.showIconOnly();
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
             public void onCentreButtonClick() {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+               Tell();
             }
 
             @Override
@@ -132,6 +153,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void Tell() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, 10);
+        } else {
+            Toast.makeText(this, "Your Device Don't Support Speech Input", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void hindiMovie() {
@@ -339,4 +372,37 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case 10:
+                if (resultCode == RESULT_OK && data != null) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    if(result.get(0) != null){
+                        Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+                        intent.putExtra("key", result.get(0));
+                        startActivity(intent);
+                    }
+                    /*Toast.makeText(getApplicationContext(), result.get(0),Toast.LENGTH_SHORT).show();  */              }
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backPress++;
+        if(backPress == 1){
+            Toast.makeText(getBaseContext(),
+                    "Press once again to exit!", Toast.LENGTH_SHORT)
+                    .show();
+        }
+        else if (backPress == 2){
+            MainActivity.this.finish();
+            System.exit(0);
+        }
+
+    }
 }
