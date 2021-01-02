@@ -73,7 +73,7 @@ public class TvShowActivity extends AppCompatActivity {
         topRated();
         onAir();
         popularTvshow();
-        SpaceNavigationView spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
+        SpaceNavigationView spaceNavigationView = findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
 //        spaceNavigationView.setSpaceBackgroundColor(ContextCompat.getColor(this, R.color.gnt_blue));
         spaceNavigationView.addSpaceItem(new SpaceItem("Movie", R.drawable.movie));

@@ -16,8 +16,8 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ProductViewHolder> {
     private static final String IMAGE_PRODUCTS = "https://image.tmdb.org/t/p/w500";
     String poster_path;
-    private Context mCtx;
-    private List<MovieList> productList;
+    private final Context mCtx;
+    private final List<MovieList> productList;
 
     public MovieAdapter(Context mCtx, List<MovieList> productList) {
         this.mCtx = mCtx;

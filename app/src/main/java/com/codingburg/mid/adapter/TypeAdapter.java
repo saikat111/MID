@@ -20,8 +20,8 @@ import com.codingburg.mid.model.TypeData;
 import java.util.List;
 
 public class TypeAdapter  extends RecyclerView.Adapter<TypeAdapter.ProductViewHolder> {
-    private Context mCtx;
-    private List<TypeData> productList;
+    private final Context mCtx;
+    private final List<TypeData> productList;
 
     public TypeAdapter(Context mCtx, List<TypeData> productList) {
         this.mCtx = mCtx;

@@ -40,6 +40,15 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <com.leo.simplearcloader.SimpleArcLoader
+                    android:visibility="visible"
+                    android:id="@+id/loader2"
+                    android:layout_centerInParent="true"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    app:arc_style="simple_arc"
+                    >
+                </com.leo.simplearcloader.SimpleArcLoader>
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/movier"
                     android:layout_width="match_parent"

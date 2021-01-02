@@ -18,8 +18,8 @@ import java.util.List;
 public class TrendingAdapter extends RecyclerView.Adapter<TrendingAdapter.ProductViewHolder> {
     private static final String IMAGE_PRODUCTS = "https://image.tmdb.org/t/p/w500";
 
-    private Context mCtx;
-    private List<TrendingList> productList;
+    private final Context mCtx;
+    private final List<TrendingList> productList;
 
     public TrendingAdapter(Context mCtx, List<TrendingList> productList) {
         this.mCtx = mCtx;

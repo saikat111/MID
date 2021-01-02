@@ -21,8 +21,8 @@ import java.util.List;
 public class TvShowAdapter extends RecyclerView.Adapter<TvShowAdapter.ProductViewHolder> {
 private static final String IMAGE_PRODUCTS = "https://image.tmdb.org/t/p/w500";
 
-private Context mCtx;
-private List<TvList> productList;
+private final Context mCtx;
+private final List<TvList> productList;
 
 public TvShowAdapter(Context mCtx, List<TvList> productList) {
         this.mCtx = mCtx;

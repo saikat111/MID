@@ -18,6 +18,7 @@ import com.codingburg.mid.adapter.MovieAdapter;
 import com.codingburg.mid.adapter.MovieAdapterForCard;
 import com.codingburg.mid.api.Api;
 import com.codingburg.mid.model.MovieList;
+import com.leo.simplearcloader.SimpleArcLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,11 +33,13 @@ public class SearchActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     List<MovieList> productList;
     private RequestQueue mRequestQueue;
+    private SimpleArcLoader simpleArcLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        simpleArcLoader = findViewById(R.id.loader2);
         mRequestQueue = Volley.newRequestQueue(this);
         productList = new ArrayList<>();
         key = getIntent().getExtras().getString("key");
@@ -48,6 +51,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void result() {
+        simpleArcLoader.start();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
         String url1  = "https://api.themoviedb.org/3/search/movie?api_key=";
         String url2 = "&language=en-US&query=";
@@ -76,9 +80,12 @@ public class SearchActivity extends AppCompatActivity {
                     }
                     MovieAdapterForCard adapter = new MovieAdapterForCard(SearchActivity.this, productList);
                     recyclerView.setAdapter(adapter);
-
+                    simpleArcLoader.stop();
+                    simpleArcLoader.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    simpleArcLoader.stop();
+                    simpleArcLoader.setVisibility(View.GONE);
 
                 }
 
@@ -88,6 +95,8 @@ public class SearchActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
 
                 error.printStackTrace();
+                simpleArcLoader.stop();
+                simpleArcLoader.setVisibility(View.GONE);
 
             }
         });

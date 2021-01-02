@@ -18,8 +18,8 @@ import java.util.List;
 public class ProductionCompanyAdapter  extends RecyclerView.Adapter<ProductionCompanyAdapter.ProductViewHolder> {
     private static final String IMAGE_PRODUCTS = "https://image.tmdb.org/t/p/w500";
     String poster_path;
-    private Context mCtx;
-    private List<ProductionCompanyData> productList;
+    private final Context mCtx;
+    private final List<ProductionCompanyData> productList;
 
     public ProductionCompanyAdapter(Context mCtx, List<ProductionCompanyData> productList) {
         this.mCtx = mCtx;

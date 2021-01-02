@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.codingburg.mid.R;
 import com.codingburg.mid.adapter.CastAdapter;
 import com.codingburg.mid.adapter.ProductionCompanyAdapter;
+import com.codingburg.mid.adapter.TvAdapterForCard;
 import com.codingburg.mid.adapter.TvCastAdapter;
 import com.codingburg.mid.adapter.TvShowAdapter;
 import com.codingburg.mid.adapter.TvVideoAdapter;
@@ -35,6 +37,9 @@ import com.codingburg.mid.model.TvList;
 import com.codingburg.mid.model.TypeData;
 import com.codingburg.mid.model.Video;
 import com.codingburg.mid.utiles.AddLifecycleCallbackListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+import com.facebook.ads.AudienceNetworkAds;
 import com.leo.simplearcloader.SimpleArcLoader;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
@@ -64,10 +69,22 @@ public class TvShowDetailsActivity extends AppCompatActivity implements AddLifec
     List<MovieList> productList;
     List<TvCast> castList;
     List<Video> videoList;
+    private AdView adView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_show_details);
+        AudienceNetworkAds.initialize(this);
+        adView = new AdView(this, "236002611255012_236004491254824", AdSize.BANNER_HEIGHT_50);
+
+        // Find the Ad Container
+        LinearLayout adContainer = findViewById(R.id.banner_container);
+
+        // Add the ad view to your activity layout
+        adContainer.addView(adView);
+
+        // Request an ad
+        adView.loadAd();
         Api api = new Api();
         api_key = api.getApi_key();
         String recommandationUrl = "/recommendations?api_key=" + api_key +"&language=en-US&page=1";
@@ -159,7 +176,7 @@ public class TvShowDetailsActivity extends AppCompatActivity implements AddLifec
     }
 
     private void castData(String castUrl) {
-        String URL_PRODUCTS   = Url + id + castUrl;;
+        String URL_PRODUCTS   = Url + id + castUrl;
         recyclerView2.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
@@ -209,7 +226,7 @@ public class TvShowDetailsActivity extends AppCompatActivity implements AddLifec
                 LinearLayoutManager.HORIZONTAL,
                 false);
         movietype.setLayoutManager(HorizontalLayout);
-        String URL_PRODUCTS   = Url + id + secoundUrl;;
+        String URL_PRODUCTS   = Url + id + secoundUrl;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
@@ -244,7 +261,7 @@ public class TvShowDetailsActivity extends AppCompatActivity implements AddLifec
     }
     private void loadMovie(String recommandationUrl) {
 
-        String URL_PRODUCTS   = Url + id + recommandationUrl;;
+        String URL_PRODUCTS   = Url + id + recommandationUrl;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
@@ -266,7 +283,7 @@ public class TvShowDetailsActivity extends AppCompatActivity implements AddLifec
                         ));
 
                     }
-                    TvShowAdapter adapter = new TvShowAdapter(TvShowDetailsActivity.this, TvShowList);
+                    TvAdapterForCard adapter = new TvAdapterForCard(TvShowDetailsActivity.this, TvShowList);
                     recyclerView.setAdapter(adapter);
 
                 } catch (JSONException e) {
@@ -296,7 +313,7 @@ public class TvShowDetailsActivity extends AppCompatActivity implements AddLifec
                 LinearLayoutManager.HORIZONTAL,
                 false);
         rproduction.setLayoutManager(HorizontalLayout);
-        String URL_PRODUCTS   = Url + id + secoundUrl;;
+        String URL_PRODUCTS   = Url + id + secoundUrl;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL_PRODUCTS, null, new Response.Listener<JSONObject>() {
             @Override
@@ -345,7 +362,7 @@ public class TvShowDetailsActivity extends AppCompatActivity implements AddLifec
                     public void onResponse(String response) {
 
                         try {
-                            JSONObject jsonObject = new JSONObject(response.toString());
+                            JSONObject jsonObject = new JSONObject(response);
                             overView.setText(jsonObject.getString("overview"));
                             runtime.setText(jsonObject.getString("number_of_seasons"));
                             budget.setText(jsonObject.getString("number_of_episodes"));

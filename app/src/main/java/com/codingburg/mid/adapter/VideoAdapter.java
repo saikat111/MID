@@ -25,8 +25,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ProductViewHolder> {
-    private Context mCtx;
-    private List<Video> productList;
+    private final Context mCtx;
+    private final List<Video> productList;
 
     public VideoAdapter(Context mCtx, List<Video> productList) {
         this.mCtx = mCtx;
@@ -71,7 +71,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ProductViewH
         public ProductViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            name = (TextView) itemView.findViewById(R.id.name);
+            name = itemView.findViewById(R.id.name);
             youTubePlayerView =itemView.findViewById(R.id.youtube_player_view);
           /* getLifecycle().addObserver(youTubePlayerView);*/
             ((MovieDetailsActivity) mCtx).addLifeCycleCallBack(youTubePlayerView);

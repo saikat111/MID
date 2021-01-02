@@ -18,7 +18,7 @@ public class SplashScreenctivity extends AppCompatActivity {
     Animation top_anumation, buttom_animation, middel_animation;
     View first, secound, third, four, five, six, seven;
     TextView name, tag;
-    private  static int SPLASH_Time = 4000;
+    private  static final int SPLASH_Time = 4000;
     ProgressBar progressBar_cyclic ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

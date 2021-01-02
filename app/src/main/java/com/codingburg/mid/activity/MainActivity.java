@@ -39,6 +39,7 @@ import com.codingburg.mid.api.Api;
 import com.codingburg.mid.model.MovieList;
 import com.codingburg.mid.model.TrendingList;
 import com.codingburg.mid.model.TvList;
+import com.facebook.ads.AudienceNetworkAds;
 import com.leo.simplearcloader.SimpleArcLoader;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AudienceNetworkAds.initialize(this);
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
         // OneSignal Initialization
         OneSignal.initWithContext(this);
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         loadPopularTvShow();
         loadTrending();
         hindiMovie();
-        SpaceNavigationView spaceNavigationView = (SpaceNavigationView) findViewById(R.id.space);
+        SpaceNavigationView spaceNavigationView = findViewById(R.id.space);
         spaceNavigationView.initWithSaveInstanceState(savedInstanceState);
 //        spaceNavigationView.setSpaceBackgroundColor(ContextCompat.getColor(this, R.color.gnt_blue));
         spaceNavigationView.addSpaceItem(new SpaceItem("Movie", R.drawable.movie));

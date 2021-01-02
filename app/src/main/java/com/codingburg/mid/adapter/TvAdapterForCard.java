@@ -12,50 +12,42 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.codingburg.mid.R;
-import com.codingburg.mid.activity.MovieDetailsActivity;
-import com.codingburg.mid.model.MovieList;
+import com.codingburg.mid.activity.TvShowDetailsActivity;
+import com.codingburg.mid.model.TvList;
 
 import java.util.List;
 
-public class MovieAdapterForCard extends RecyclerView.Adapter<MovieAdapterForCard.ProductViewHolder> {
+public class TvAdapterForCard extends RecyclerView.Adapter<TvAdapterForCard.ProductViewHolder> {
     private static final String IMAGE_PRODUCTS = "https://image.tmdb.org/t/p/w500";
-    String poster_path;
-    private final Context mCtx;
-    private final List<MovieList> productList;
 
-    public MovieAdapterForCard(Context mCtx, List<MovieList> productList) {
+    private final Context mCtx;
+    private final List<TvList> productList;
+
+    public TvAdapterForCard(Context mCtx, List<TvList> productList) {
         this.mCtx = mCtx;
         this.productList = productList;
     }
 
     @Override
-    public MovieAdapterForCard.ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TvAdapterForCard.ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.movie_card_2, null);
-        return new MovieAdapterForCard.ProductViewHolder(view);
+        return new TvAdapterForCard.ProductViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MovieAdapterForCard.ProductViewHolder holder, int position) {
-        MovieList movieData = productList.get(position);
+    public void onBindViewHolder(TvAdapterForCard.ProductViewHolder holder, int position) {
+        TvList movieData = productList.get(position);
 
         //loading the image
-
         Glide.with(mCtx)
                 .load(IMAGE_PRODUCTS + movieData.getPoster_path())
                 .into(holder.poster);
-        poster_path = movieData.getPoster_path();
-        holder.title.setText(movieData.getTitle());
-        holder.vote.setText(movieData.getVote_count() + " " + "Ratings");
+
+        holder.title.setText(movieData.getName());
+        holder.vote.setText(movieData.getVote_count() + " " + "votes");
         holder.rating.setText(movieData.getVote_average());
-        holder.date.setText(movieData.getRelease_date());
         holder.id.setText(movieData.getId());
-        holder.original_language.setText(movieData.getOriginal_language());
-        holder.original_title.setText(movieData.getOriginal_title());
-        holder.overview.setText(movieData.getOverview());
-        holder.popularity.setText(movieData.getPopularity());
-
-
     }
 
     @Override
@@ -65,27 +57,25 @@ public class MovieAdapterForCard extends RecyclerView.Adapter<MovieAdapterForCar
 
     class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView title, rating, vote, date, id,original_language,original_title,overview,popularity;
+        TextView title, rating, vote, date, id;
         ImageView poster;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+
             title = itemView.findViewById(R.id.title);
             rating = itemView.findViewById(R.id.rating);
             vote = itemView.findViewById(R.id.vote);
             date = itemView.findViewById(R.id.date);
             poster = itemView.findViewById(R.id.poster);
             id = itemView.findViewById(R.id.id);
-            original_language = itemView.findViewById(R.id.original_language);
-            original_title = itemView.findViewById(R.id.original_title);
-            overview = itemView.findViewById(R.id.overview);
-            popularity = itemView.findViewById(R.id.popularity);
+
         }
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(v.getContext(), MovieDetailsActivity.class);
+            Intent intent = new Intent(v.getContext(), TvShowDetailsActivity.class);
             intent.putExtra("id", id.getText().toString());
             intent.putExtra("title", title.getText().toString());
             intent.putExtra("vote", vote.getText().toString());

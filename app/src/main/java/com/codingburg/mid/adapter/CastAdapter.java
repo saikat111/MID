@@ -20,8 +20,8 @@ import java.util.List;
 
 public class CastAdapter extends RecyclerView.Adapter<CastAdapter.ProductViewHolder> {
     private static final String IMAGE_PRODUCTS = "https://image.tmdb.org/t/p/w500";
-    private Context mCtx;
-    private List<Cast> productList;
+    private final Context mCtx;
+    private final List<Cast> productList;
 
     public CastAdapter(Context mCtx, List<Cast> productList) {
         this.mCtx = mCtx;
