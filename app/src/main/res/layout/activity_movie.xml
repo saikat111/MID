@@ -145,6 +145,11 @@
                     android:layout_height="match_parent"
                     android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>
+            <com.facebook.ads.NativeAdLayout
+                android:id="@+id/native_ad_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
     <com.luseen.spacenavigation.SpaceNavigationView

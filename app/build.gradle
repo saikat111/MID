@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
-    id 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+    id "com.onesignal.androidsdk.onesignal-gradle-plugin" version "0.12.10"
+
 }
 
 android {
@@ -11,8 +12,8 @@ android {
         applicationId "com.codingburg.mid"
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 5
-        versionName "5.0.0.01"
+        versionCode 6
+        versionName "6.0.0.01"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,5 +46,5 @@ dependencies {
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
     implementation 'androidx.annotation:annotation:1.0.0'
     implementation 'com.facebook.android:audience-network-sdk:6.+'
-
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
 }

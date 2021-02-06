@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,9 +38,13 @@ import com.codingburg.mid.model.TvList;
 import com.codingburg.mid.model.TypeData;
 import com.codingburg.mid.model.Video;
 import com.codingburg.mid.utiles.AddLifecycleCallbackListener;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
 import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
 import com.facebook.ads.AudienceNetworkAds;
+import com.facebook.ads.InterstitialAd;
+import com.facebook.ads.InterstitialAdListener;
 import com.leo.simplearcloader.SimpleArcLoader;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
@@ -70,6 +75,8 @@ public class TvShowDetailsActivity extends AppCompatActivity implements AddLifec
     List<TvCast> castList;
     List<Video> videoList;
     private AdView adView;
+    private InterstitialAd interstitialAd;
+    private final String TAG = MovieDetailsActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +129,73 @@ public class TvShowDetailsActivity extends AppCompatActivity implements AddLifec
         ratingd.setText(rating);
         name.setText(title);
         votes.setText(vote);
+
+
+
+
+        interstitialAd = new InterstitialAd(this, "236002611255012_257438412444765");
+
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {
+                    @Override
+                    public void onInterstitialDisplayed(Ad ad) {
+                        // Interstitial ad displayed callback
+                        Log.e(TAG, "Interstitial ad displayed.");
+                    }
+
+                    @Override
+                    public void onInterstitialDismissed(Ad ad) {
+                        // Interstitial dismissed callback
+                        Log.e(TAG, "Interstitial ad dismissed.");
+                    }
+
+                    @Override
+                    public void onError(Ad ad, AdError adError) {
+                        // Ad error callback
+                        Log.e(TAG, "Interstitial ad failed to load: " + adError.getErrorMessage());
+                    }
+
+                    @Override
+                    public void onAdLoaded(Ad ad) {
+                        // Interstitial ad is loaded and ready to be displayed
+                        Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!");
+                        // Show the ad
+                        interstitialAd.show();
+                    }
+
+                    @Override
+                    public void onAdClicked(Ad ad) {
+                        // Ad clicked callback
+                        Log.d(TAG, "Interstitial ad clicked!");
+                    }
+
+                    @Override
+                    public void onLoggingImpression(Ad ad) {
+                        // Ad impression logged callback
+                        Log.d(TAG, "Interstitial ad impression logged!");
+                    }
+                };
+
+                // For auto play video ads, it's recommended to load the ad
+                // at least 30 seconds before it is shown
+                interstitialAd.loadAd(
+                        interstitialAd.buildLoadAdConfig()
+                                .withAdListener(interstitialAdListener)
+                                .build());
+            }
+        });
+
+
+
+
+
+
+
+
+
+
         simpleArcLoader2 = findViewById(R.id.loader);
         productList = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
